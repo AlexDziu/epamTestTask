@@ -1,19 +1,17 @@
 package tests;
 
 import driverManager.DriverManager;
-import org.junit.After;
-import org.junit.Before;
-import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 
 public class BaseTest {
-    private static final ThreadLocal<WebDriver> DRIVER_THREAD_LOCAL = new ThreadLocal<>();
 
-    @Before
+    @BeforeMethod(alwaysRun = true)
     public void setUp() {
         DriverManager.setUpDriver();
     }
 
-    @After
+    @AfterMethod(alwaysRun = true)
     public void turnDown() {
         DriverManager.quiteDriver();
     }

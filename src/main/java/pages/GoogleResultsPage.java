@@ -14,4 +14,19 @@ public class GoogleResultsPage extends BasePage {
         listOfLinks.get(0).click();
         return new FirstLinkPage();
     }
+
+    public boolean domainNameIsPresent(String domainName, int numberOfPages) {
+        int currentPage = 1;
+        while (currentPage <= numberOfPages) {
+            List<WebElement> listOfLinks = findAll(resultLinks);
+            for (WebElement link : listOfLinks) {
+                if (link.getText().contains(domainName)) {
+                    return true;
+                }
+            }
+            find(nextPageButton).click();
+            currentPage++;
+        }
+        return false;
+    }
 }
