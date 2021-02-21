@@ -1,14 +1,28 @@
 package pages;
 
-import org.openqa.selenium.By;
+import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
+@Slf4j
 public class GoogleSearchPage extends BasePage {
-    private final By searchField = By.xpath("//input[@name='q']");
-    private final By searchButton = By.xpath("//div[@class='tfB0Bf']//input[@name='btnK']");
+
+    @FindBy(xpath = "//input[@name='q']")
+    private WebElement searchField;
+
+    @FindBy(css = ".UUbT9 [name='btnK']")
+    private WebElement searchButton;
+
+    public GoogleSearchPage() {
+        PageFactory.initElements(getDriver(), this);
+    }
 
     public GoogleResultsPage searchFor(String searchRequest) {
-        waitUntilVisible(searchField, 5).sendKeys(searchRequest);
-        waitUntilClickable(searchButton, 5).click();
+        log.info("Input text in the search field");
+        waitUntilVisible(searchField).sendKeys(searchRequest);
+        log.info("Click on the search button");
+        waitUntilClickable(searchButton).click();
         return new GoogleResultsPage();
     }
 }

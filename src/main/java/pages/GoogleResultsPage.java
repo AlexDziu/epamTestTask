@@ -1,30 +1,45 @@
 package pages;
 
-import org.openqa.selenium.By;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
-public class GoogleResultsPage extends BasePage {
-    private final By resultLinks = By.xpath("//div[@id='rso']");
-    private final By nextPageButton = By.xpath("//a[@id='pnnext']");
+import static java.util.Collections.*;
 
-    public FirstLinkPage clickOnFirstPage() {
-        List<WebElement> listOfLinks = findAll(resultLinks);
+@Slf4j
+public class GoogleResultsPage extends BasePage {
+
+    @FindBy(xpath = "//*[@class='g']//h3/parent::a")
+    private WebElement resultLinks;
+
+    @FindBy(xpath = "//a[@id='pnnext']")
+    private WebElement nextPageButton;
+
+    public GoogleResultsPage() {
+        PageFactory.initElements(getDriver(), this);
+    }
+
+    public GoogleResultsPage clickOnFirstPage() {
+        log.info("Click on the first site");
+        List<WebElement> listOfLinks = singletonList(resultLinks);
         listOfLinks.get(0).click();
-        return new FirstLinkPage();
+        return this;
     }
 
     public boolean domainNameIsPresent(String domainName, int numberOfPages) {
+        log.info("Checking that domain name is present on the pages");
         int currentPage = 1;
         while (currentPage <= numberOfPages) {
-            List<WebElement> listOfLinks = findAll(resultLinks);
+            List<WebElement> listOfLinks = singletonList(resultLinks);
             for (WebElement link : listOfLinks) {
                 if (link.getText().contains(domainName)) {
                     return true;
                 }
             }
-            find(nextPageButton).click();
+            nextPageButton.click();
             currentPage++;
         }
         return false;
